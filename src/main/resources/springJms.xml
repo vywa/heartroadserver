@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"  ?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"  
+        xmlns:jms="http://www.springframework.org/schema/jms"  
+        xsi:schemaLocation="http://www.springframework.org/schema/beans   
+         http://www.springframework.org/schema/beans/spring-beans-4.0.xsd   
+         http://www.springframework.org/schema/context   
+         http://www.springframework.org/schema/context/spring-context-4.0.xsd   
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd   
+        http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-40.xsd">  
+        
+        <context:component-scan base-package="com.healthcloud.service.impl.message" />  
+        
+        <!-- Spring提供的JMS工具类，它可以进行消息发送、接收等 -->  
+        <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">  
+            <!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->  
+            <property name="connectionFactory" ref="connectionFactory"/>  
+            <property name="messageConverter" ref="mailMessageConverter"/>
+        </bean>  
+           
+        <!-- 真正可以产生Connection的ConnectionFactory，由对应的 JMS服务厂商提供-->  
+        <bean id="targetConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">  
+            <property name="brokerURL" value="tcp://127.0.0.1:61616"/>  
+        </bean>  
+           
+        <!-- Spring用于管理真正的ConnectionFactory的ConnectionFactory -->  
+        <bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">  
+            <!-- 目标ConnectionFactory对应真实的可以产生JMS Connection的ConnectionFactory -->  
+            <property name="targetConnectionFactory" ref="targetConnectionFactory"/>  
+        </bean>  
+        
+     <!--    <bean id="mailMessageConverter" class="com.healthcloud.service.impl.message.MailMessageConverter">
+        
+        </bean> -->
+        
+	     <!-- 邮件回复队列 -->
+	    <bean id="emailResponseQueue" class="org.apache.activemq.command.ActiveMQQueue">  
+	    <constructor-arg>  
+	        <value>emailResponseQueue</value>  
+	    </constructor-arg>  
+		</bean>  
+	
+		     <!-- 短信回复队列 -->
+	       <bean id="smsResponseQueue" class="org.apache.activemq.command.ActiveMQQueue">  
+	    <constructor-arg>  
+	        <value>smsResponseQueue</value>  
+	    </constructor-arg>  
+		</bean> 
+		 
+	         <!-- 回复队列对应的监听器 -->
+	      <bean id="smsResponseQueueListener" class="com.healthcloud.service.impl.message.SmsReceiveQueueListener"/>
+	      <bean id="emailResponseQueueListener" class="com.healthcloud.service.impl.message.EmailReceiveQueueListener"/>
+	        
+
+	           
+          <!-- 邮件请求接收队列 -->
+           <bean id="emailQueue" class="org.apache.activemq.command.ActiveMQQueue">  
+           <constructor-arg>  
+               <value>emailQueue</value>  
+           </constructor-arg>  
+       </bean>   
+       
+   	<!-- 短信请求接收队列 -->
+	    <bean id="smsQueue" class="org.apache.activemq.command.ActiveMQQueue">  
+	           <constructor-arg>  
+	               <value>smsQueue</value>  
+	           </constructor-arg>  
+	       </bean>  
+
+       
+   <bean id="emailListenerAdapter" class="org.springframework.jms.listener.adapter.MessageListenerAdapter">  
+    <property name="delegate">  
+            <bean class="com.healthcloud.service.impl.message.EmailMessageListener"/>  
+        </property>  
+        <property name="defaultListenerMethod" value="handleMessage"/>   
+         <property name="defaultResponseDestination" ref="emailResponseQueue"/>  
+    </bean> 
+    
+       <bean id="smsListenerAdapter" class="org.springframework.jms.listener.adapter.MessageListenerAdapter">  
+       <property name="delegate">  
+            <bean class="com.healthcloud.service.impl.message.SmsListener"/>  
+        </property>  
+        <property name="defaultListenerMethod" value="handleMessage"/>  
+        <property name="defaultResponseDestination" ref="smsResponseQueue"/>  
+    </bean>  
+
+
+	<!-- 邮件监听适配器对应的监听容器 -->
+	
+	<bean id="emailQueueMessageListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">  
+	    <property name="connectionFactory" ref="connectionFactory"/>  
+	<property name="destination" ref="emailQueue"/>
+	    <property name="messageListener"  ref="emailListenerAdapter"/>
+	</bean>  
+    
+    
+    	<bean id="smsQueueMessageListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">  
+	    <property name="connectionFactory" ref="connectionFactory"/>  
+	   <property name="destination" ref="smsQueue"/>
+	    <property name="messageListener"  ref="smsListenerAdapter"/>
+	    
+	</bean> 
+	
+	
+	
+	<!-- 回复队列对应的监听容器 -->
+	    <!--邮件响应对应的监听容器 -->  
+	<bean id="emailResponseQueueMessageListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">  
+	    <property name="connectionFactory" ref="connectionFactory"/>  
+	    <property name="destination" ref="emailResponseQueue"/>  
+	    <property name="messageListener" ref="emailResponseQueueListener"/>
+	</bean>  
+
+
+	<!--短信响应对应的监听容器 -->  
+	<bean id="smsResponseQueueMessageListenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">  
+	    <property name="connectionFactory" ref="connectionFactory"/>  
+	    <property name="destination" ref="smsResponseQueue"/>  
+	    <property name="messageListener" ref="smsResponseQueueListener"/>
+	</bean>  
+
+    </beans>  

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+    <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+    <mapper namespace="com.healthcloud.dao.message.DailyNewsDao">  
+      
+        <resultMap type="DailyNews" id="dailyNews">  
+            <id property="id" column="id"/>  
+            <result property="title" column="title"/>  
+            <result property="imageUrl" column="image_url"/>  
+            <result property="content" column="content"/>
+             <result property="url" column="url"/>
+            <result property="publishTime" column="publish_time"/>  
+        </resultMap>  
+          
+          <!-- 添加资讯 -->
+          <insert id="add" parameterType="DailyNews">
+          		insert into daily_news
+          		(title,image_url,content,url,publish_time)
+          		values
+          		(#{title},#{imageUrl},#{content},#{url},#{publishTime})
+          </insert>
+          
+          
+        <!-- 查询某条资讯 -->  
+        <select id="findById"  resultMap="dailyNews" >  
+                SELECT * from daily_news
+               
+                    where id = #{id}
+        </select>  
+
+          
+    </mapper>  

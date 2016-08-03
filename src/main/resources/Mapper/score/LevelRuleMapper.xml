@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+    <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+    <mapper namespace="com.healthcloud.dao.score.LevelRuleDao">  
+      
+        <resultMap type="LevelRule" id="levelRule">  
+            <id property="id" column="id"/>  
+            <result property="name" column="name"/>  
+              <result property="description" column="description"/>  
+                <result property="startCount" column="start_count"/>  
+                  <result property="endCount" column="end_count"/>  
+        </resultMap>  
+          
+          <!-- 添加等级变化 -->
+          <insert id="add" parameterType="LevelRule">
+          <selectKey keyProperty="id" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+        
+          	insert into level_rule (name,description,start_count,end_count)
+          	values 
+          	(#{name},#{description},#{startCount},#{endCount})
+          	
+          </insert>
+  
+        <!-- 查询等级变化 -->  
+        <select id="query" resultMap="levelRule" parameterType="LevelRule" >  
+                SELECT * from level_rule 
+                 <trim prefix="where" prefixOverrides="and |or">  
+				        <if test="name != null">  
+				            name = #{name}  
+				        </if>  
+				   </trim>  
+				   
+        </select> 
+        
+          <!-- 查询等级变化，根据用户名 -->  
+        <select id="queryOne" resultMap="levelRule" parameterType= "LevelRule">  
+                SELECT * from level_rule 
+               <trim prefix="where" prefixOverrides="and |or">  
+				        <if test="name != null">  
+				            name = #{name}  
+				        </if>  
+				   </trim> 
+				   
+        </select> 
+        
+             <!-- 查询所有等级变化 -->
+          <select id="queryAll" resultMap="levelRule">
+          		select * from level_rule
+          </select>
+          
+        <!-- 查询积分变化，根据id -->  
+        <select id="queryById"  resultMap="levelRule" >  
+                SELECT * from level_rule 
+                    WHERE 
+                    id = #{id}  
+               
+        </select>  
+        
+        
+		<!-- 更新等级变化信息 -->
+          <update id="update" parameterType="LevelRule">
+          	update level_rule
+          	 <trim prefix="SET" suffixOverrides=",">  
+	       
+	        <if test="name != null and name != ''">  
+	           name = #{name},  
+	        </if>  
+	        <if test="description != null and description != ''">  
+	           description = #{description},  
+	        </if>  
+	     
+        </trim>
+       		 where 
+      	  id = #{id} 
+      	
+          </update>
+          
+     
+         
+         <!-- 删除等级变化 -->
+         <delete id="delete">
+         	delete from level_rule 
+         	where
+         	id = #{id}
+         </delete>
+          	
+         
+    </mapper>  

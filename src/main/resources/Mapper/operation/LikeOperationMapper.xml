@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+    <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+    <mapper namespace="com.healthcloud.dao.operation.LikeOperationDao">  
+      
+        <resultMap type="LikeOperation" id="co">  
+            <id property="id" column="id"/>  
+            <result property="kind" column="kind"/> 
+            <result property="detailId" column="detail_id"/>  
+            <result property="userId" column="user_id"/>  
+            <result property="operationTime" column="operation_time"/>
+         
+        </resultMap>  
+          
+          
+        <!-- 添加点赞 -->
+        <insert id="add" parameterType="LikeOperation">
+        	insert into like_operation 
+        	(kind,detial_id,user_id,operation_time)
+        	values 
+        	(#{kind},#{detailId},#{userId},#{operationTime})
+        </insert>
+
+		<!-- 查询点赞 -->
+		<select id="query" >
+			select * from like_operation
+			where
+			kind = #{kind} 
+			and detail_id=#{detailId}
+			and user_id = #{userId}
+		</select>
+
+	
+    </mapper>  

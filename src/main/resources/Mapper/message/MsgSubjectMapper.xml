@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+    <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+    <mapper namespace="com.healthcloud.dao.message.MsgSubjectDao">  
+      
+        <resultMap type="MsgSubject" id="msgSubject">  
+            <id property="id" column="id"/>  
+            <result property="msgId" column="msg_id"/>
+            <result property="catagory" column="catagory"/>
+            <result property="title" column="title"/>  
+             <result property="url" column="url"/>
+            <result property="createTime" column="create_time"/>  
+        </resultMap>  
+          
+          <!-- 添加摘要 -->
+          <insert id="add" parameterType="MsgSubject">
+          		insert into msg_subject
+          		(msg_id,catagory,title,url,create_time)
+          		values
+          		(#{msg_id},#{catagory},#{title},#{url},#{createTime})
+          </insert>
+          
+          
+        <!-- 查询某条摘要 -->  
+        <select id="findById"  resultMap="msgSubject" >  
+                SELECT * from msg_subject
+                    where id = #{id}
+        </select>  
+
+          
+    </mapper>  

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+    <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+    <mapper namespace="com.healthcloud.dao.shopping.OrderDao">  
+      
+        <resultMap type="Order" id="order">  
+            <id property="id" column="id"/>  
+            <result property="orderId" column="order_id"/>  
+              <result property="body" column="body"/>  
+                <result property="detail" column="detail"/>
+                 <result property="feeType" column="fee_type"/>
+                  <result property="totalFee" column="total_fee"/>
+                   <result property="status" column="status"/>    
+                  <result property="createTime" column="create_time"/>  
+        </resultMap>  
+          
+          <!-- 添加订单 -->
+          <insert id="add" parameterType="Order">
+          <selectKey keyProperty="id" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+        
+          	insert into shop_order (order_id,body,detail,fee_type,total_fee,status,create_time)
+          	values 
+          	(#{orderId},#{body},#{detail},#{feeType},#{totalFee},#{status},#{createTime})
+          	
+          </insert>
+  
+        <!-- 查询订单 -->  
+        <select id="query" resultMap="order" parameterType="Order" >  
+                SELECT * from shop_order 
+                 <trim prefix="where" prefixOverrides="and |or">  
+				        <if test="orderId != null">  
+				            order_id = #{orderId}  
+				        </if>  
+				         <if test="status != null">  
+				            status = #{status}  
+				        </if>  
+				   </trim>  
+				   
+        </select> 
+        
+          <!-- 查询订单-->  
+        <select id="queryOne" resultMap="order" parameterType= "Order">  
+                SELECT * from shop_order 
+                 <trim prefix="where" prefixOverrides="and |or">  
+				           <if test="orderId != null">  
+				            order_id = #{orderId}  
+				        </if>  
+				         <if test="status != null">  
+				            status = #{status}  
+				        </if>  
+				   </trim>  
+				   
+        </select> 
+        
+             <!-- 查询所有订单 -->
+          <select id="queryAll" resultMap="order">
+          		select * from shop_order
+          </select>
+          
+        <!-- 查询订单，根据id -->  
+        <select id="queryById"  resultMap="order" >  
+                SELECT * from shop_order 
+                    WHERE 
+                    id = #{id}  
+               
+        </select>  
+        
+        
+		<!-- 更新订单 -->
+          <update id="update" parameterType="Order">
+          	update shop_order
+          	 <trim prefix="SET" suffixOverrides=",">  
+	       
+	        <if test="orderId != null and orderId != ''">  
+	           order_id = #{orderId},  
+	        </if>  
+	         <if test="body != null and body != ''">  
+	           body = #{body},  
+	        </if>  
+	        <if test="detail != null and detail != ''">  
+	           detail = #{detail},  
+	        </if>  
+	         <if test="feeType != null and feeType != ''">  
+	           fee_type = #{feeType},  
+	        </if>  
+	         <if test="totalFee != null and totalFee != ''">  
+	           total_fee = #{totalFee},  
+	        </if>  
+	         <if test="status != null and status != ''">  
+	           status = #{status},  
+	        </if>  
+        </trim>
+       		 where 
+      	  id = #{id} 
+      	
+          </update>
+          
+     
+         
+         <!-- 删除订单 -->
+         <delete id="delete">
+         	delete from shop_order 
+         	where
+         	id = #{id}
+         </delete>
+          	
+         
+    </mapper>  

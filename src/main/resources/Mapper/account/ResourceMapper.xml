@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+    <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+    <mapper namespace="com.healthcloud.dao.account.ResourceDao">  
+      
+        <resultMap type="Resource" id="resource">  
+            <id property="id" column="id"/>  
+            <result property="content" column="content"/>  
+            <result property="url" column="url"/>  
+        </resultMap>  
+          
+          <!-- 添加资源 -->
+          <insert id="add" parameterType="Resource">
+          <selectKey keyProperty="id" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+        
+          	insert into resource (content,url)
+          	
+          	values 
+          	(#{content},#{url})
+          	
+          </insert>
+  
+        <!-- 查询资源 -->  
+        <select id="query" resultMap="resource" parameterType="Resource" >  
+                SELECT * from resource 
+                 <trim prefix="where" prefixOverrides="and |or">  
+				        <if test="url != null">  
+				            url = #{url}  
+				        </if>  
+				   </trim>  
+				   
+        </select> 
+        
+          <!-- 查询资源 -->  
+        <select id="queryOne" resultMap="resource" parameterType= "Resource">  
+                SELECT * from resource 
+                 <trim prefix="where" prefixOverrides="and |or">  
+				        <if test="url != null">  
+				            url = #{url}  
+				        </if>  
+				   </trim>  
+				   
+        </select> 
+        
+             <!-- 查询所有资源 -->
+          <select id="queryAll" resultMap="resource">
+          		select * from resource
+          </select>
+          
+        <!-- 查询资源 -->  
+        <select id="queryById"   >  
+                SELECT * from resource 
+                    WHERE 
+                    id = #{id}  
+        </select>  
+        
+        
+		<!-- 更新资源信息 -->
+          <update id="update" parameterType="Resource">
+          	update resource
+          	 <trim prefix="SET" suffixOverrides=",">  
+	        <if test="content != null and content != ''">  
+	           content = #{content},  
+	        </if>  
+	           <if test="url != null and url != ''">  
+	            url = #{url},  
+	        </if>  
+        </trim>
+       		 where 
+      	  id = #{id} 
+
+          </update>
+          
+     
+         
+         <!-- 删除资源 -->
+         <delete id="delete">
+         	delete from resource 
+         	where
+         	id = #{id}
+         </delete>
+          	
+         
+    </mapper>  

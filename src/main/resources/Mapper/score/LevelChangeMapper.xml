@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+    <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+    <mapper namespace="com.healthcloud.dao.score.LevelChangeDao">  
+      
+        <resultMap type="LevelChange" id="levelChange">  
+            <id property="id" column="id"/>  
+            <result property="userId" column="user_id"/>  
+              <result property="levelId" column="level_id"/>  
+                <result property="score" column="score"/>  
+                  <result property="updateTime" column="update_time"/>  
+        </resultMap>  
+          
+          <!-- 添加等级变化 -->
+          <insert id="add" parameterType="LevelChange">
+          <selectKey keyProperty="id" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+        
+          	insert into level_change (user_id,level_id,score,update_time)
+          	values 
+          	(#{userId},#{levelId},#{score},#{updateTime})
+          	
+          </insert>
+  
+        <!-- 查询等级变化 -->  
+        <select id="query" resultMap="levelChange" parameterType="LevelChange" >  
+                SELECT * from level_change 
+                 <trim prefix="where" prefixOverrides="and |or">  
+				        <if test="userId != null">  
+				            user_id = #{userId}  
+				        </if>  
+				         <if test="levelId != null">  
+				            level_id = #{levelId}  
+				        </if>  
+				   </trim>  
+				   
+        </select> 
+        
+          <!-- 查询等级变化，根据用户名 -->  
+        <select id="queryOne" resultMap="levelChange" parameterType= "LevelChange">  
+                SELECT * from level_change 
+                 <trim prefix="where" prefixOverrides="and |or">  
+				           <if test="userId != null">  
+				            user_id = #{userId}  
+				        </if>  
+				         <if test="levelId != null">  
+				            level_id = #{levelId}  
+				        </if>   
+				  
+				   </trim>  
+				   
+        </select> 
+        
+             <!-- 查询所有等级变化 -->
+          <select id="queryAll" resultMap="levelChange">
+          		select * from level_change
+          </select>
+          
+        <!-- 查询等级变化，根据id -->  
+        <select id="queryById"  resultMap="levelChange" >  
+                SELECT * from level_change 
+                    WHERE 
+                    id = #{id}  
+               
+        </select>  
+        
+        
+		<!-- 更新等级变化信息 -->
+          <update id="update" parameterType="LevelChange">
+          	update level_change
+          	 <trim prefix="SET" suffixOverrides=",">  
+	       
+	        <if test="score != null and score != ''">  
+	           score = #{score},  
+	        </if>  
+	         <if test="updateTime != null and updateTime != ''">  
+	           update_time = #{updateTime},  
+	        </if>  
+	       
+        </trim>
+       		 where 
+      	  id = #{id} 
+      	
+          </update>
+          
+     
+         
+         <!-- 删除等级变化 -->
+         <delete id="delete">
+         	delete from level_change 
+         	where
+         	id = #{id}
+         </delete>
+          	
+         
+    </mapper>  

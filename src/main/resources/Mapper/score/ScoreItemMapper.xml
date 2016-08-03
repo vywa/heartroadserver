@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+    <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+    <mapper namespace="com.healthcloud.dao.score.ScoreItemDao">  
+      
+        <resultMap type="ScoreItem" id="scoreItem">  
+            <id property="id" column="id"/>  
+            <result property="catagory" column="catagory"/>  
+              <result property="item" column="item"/>  
+                <result property="encourage" column="encourage"/>  
+                  <result property="score" column="score"/>  
+                    <result property="ruleId" column="rule_id"/>  
+                      <result property="createTime" column="create_time"/>  
+        </resultMap>  
+          
+          <!-- 添加积分项目 -->
+          <insert id="add" parameterType="ScoreItem">
+          <selectKey keyProperty="id" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+        
+          	insert into score_item (catagory,item,encourage,score,rule_id,create_time)
+          	values 
+          	(#{catagory},#{item},#{encourage},#{score},#{ruleId},#{createTime})
+          	
+          </insert>
+  
+        <!-- 查询积分项目 -->  
+        <select id="query" resultMap="scoreItem" parameterType="ScoreItem" >  
+                SELECT * from score_item 
+                 <trim prefix="where" prefixOverrides="and |or">  
+				        <if test="catagory != null">  
+				            catagory = #{catagory}  
+				        </if>  
+				         <if test="item != null">  
+				            item = #{item}  
+				        </if> 
+				   </trim>  
+				   
+        </select> 
+        
+          <!-- 查询积分项目，根据用户名 -->  
+        <select id="queryOne" resultMap="scoreItem" parameterType= "ScoreItem">  
+                SELECT * from score_item 
+                 <trim prefix="where" prefixOverrides="and |or">  
+				          <if test="catagory != null">  
+				            catagory = #{catagory}  
+				        </if>  
+				         <if test="item != null">  
+				            item = #{item}  
+				        </if> 
+				  
+				   </trim>  
+				   
+        </select> 
+        
+             <!-- 查询所有积分项目 -->
+          <select id="queryAll" resultMap="scoreItem">
+          		select * from score_item
+          </select>
+          
+        <!-- 查询积分项目，根据id -->  
+        <select id="queryById"  resultMap="scoreItem" >  
+                SELECT * from score_item 
+                    WHERE 
+                    id = #{id}  
+               
+        </select>  
+        
+        
+		<!-- 更新积分项目信息 -->
+          <update id="update" parameterType="ScoreItem">
+          	update score_item
+          	 <trim prefix="SET" suffixOverrides=",">  
+	        <if test="catagory != null and catagory != ''">  
+	           catagory = #{catagory},  
+	        </if>  
+	           <if test="item != null and item != ''">  
+	           item = #{item},  
+	        </if>  
+	           <if test="encourage != null and encourage != ''">  
+	           encourage = #{encourage},  
+	        </if>  
+	           <if test="score != null and score != ''">  
+	           score = #{score},  
+	        </if>  
+	          <if test="ruleId != null and ruleId != ''">  
+	           rule_id = #{ruleId},  
+	        </if>  
+	          <if test="createTime != null and createTime != ''">  
+	           create_time = #{createTime},  
+	        </if>  
+	       
+        </trim>
+       		 where 
+      	  id = #{id} 
+      	
+          </update>
+          
+     
+         
+         <!-- 删除账号 -->
+         <delete id="delete">
+         	delete from score_item 
+         	where
+         	id = #{id}
+         </delete>
+          	
+         
+    </mapper>  

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	   xmlns:aop="http://www.springframework.org/schema/aop" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd        
+	http://www.springframework.org/schema/context        
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/aop  
+	http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	http://www.springframework.org/schema/data/mongo
+	http://www.springframework.org/schema/data/mongo/spring-mongo-1.8.xsd">
+
+	<!-- Spring 统一日志处理   LogInterceptor拦截器 配置　-->     
+<!-- <bean id="logInterceptor" class="com.hengyun.util.log.LogInterceptor"/> -->  
+<!-- Spring 统一异常处理  ExceptionAdvisor配置 -->  
+
+ <bean id="exceptionHandler" class="com.hengyun.util.exception.ExceptionAdvisor"></bean>
+ 
+    <!-- Bean自动代理处理器 配置-->    
+<bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator" >  
+   <property name="beanNames">  
+    <list>   
+        <value>*Dao</value>  
+       <value>*Controller</value>       
+        <value>*Service</value> 
+    </list>  
+    
+   </property>  
+   <property name="interceptorNames">  
+   
+    <list>  
+       <value>exceptionHandler</value>     
+    </list>  
+   </property>  
+</bean>  
+
+	<!-- 
+	<bean id="springMethodInterceptor" class="com.hengyun.util.interceptor.AllowedInterceptor" ></bean>
+	    <aop:config>
+	                
+	                 <aop:pointcut id="loginPoint"
+	                 expression="execution(public * com.qunar.wireless.ugc.controllor.web.*.*(..)) "/>  
+	               
+	                 <aop:advisor pointcut-ref="loginPoint" advice-ref="springMethodInterceptor"/>
+	      </aop:config> 
+	 -->
+	 
+</beans>

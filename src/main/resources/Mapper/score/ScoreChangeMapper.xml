@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+    <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+    <mapper namespace="com.healthcloud.dao.score.ScoreChangeDao">  
+      
+        <resultMap type="ScoreChange" id="scoreChange">  
+            <id property="id" column="id"/>  
+            <result property="userId" column="user_id"/>  
+              <result property="scoreId" column="score_id"/>  
+                <result property="count" column="count"/>  
+                  <result property="updateTime" column="update_time"/>  
+        </resultMap>  
+          
+          <!-- 添加积分变化 -->
+          <insert id="add" parameterType="ScoreChange">
+          <selectKey keyProperty="id" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+        
+          	insert into score_change (user_id,score_id,count,update_time)
+          	values 
+          	(#{userId},#{scoreId},#{count},#{updateTime})
+          	
+          </insert>
+  
+        <!-- 查询积分变化 -->  
+        <select id="query" resultMap="scoreChange" parameterType="ScoreChange" >  
+                SELECT * from score_change 
+                 <trim prefix="where" prefixOverrides="and |or">  
+				        <if test="userId != null">  
+				            user_id = #{userId}  
+				        </if>  
+				         <if test="scoreId != null">  
+				            score_id = #{scoreId}  
+				        </if>  
+				   </trim>  
+				   
+        </select> 
+        
+          <!-- 查询积分变化，根据用户名 -->  
+        <select id="queryOne" resultMap="scoreChange" parameterType= "ScoreChange">  
+                SELECT * from score_change 
+                 <trim prefix="where" prefixOverrides="and |or">  
+				           <if test="userId != null">  
+				            user_id = #{userId}  
+				        </if>  
+				         <if test="scoreId != null">  
+				            score_id = #{scoreId}  
+				        </if>   
+				  
+				   </trim>  
+				   
+        </select> 
+        
+             <!-- 查询所有积分变化 -->
+          <select id="queryAll" resultMap="scoreChange">
+          		select * from score_change
+          </select>
+          
+        <!-- 查询积分变化，根据id -->  
+        <select id="queryById"  resultMap="scoreChange" >  
+                SELECT * from score_change 
+                    WHERE 
+                    id = #{id}  
+               
+        </select>  
+        
+        
+		<!-- 更新积分变化信息 -->
+          <update id="update" parameterType="ScoreChange">
+          	update score_change
+          	 <trim prefix="SET" suffixOverrides=",">  
+	       
+	        <if test="count != null and count != ''">  
+	           count = #{count},  
+	        </if>  
+	         <if test="updateTime != null and updateTime != ''">  
+	           update_time = #{updateTime},  
+	        </if>  
+	       
+        </trim>
+       		 where 
+      	  id = #{id} 
+      	
+          </update>
+          
+     
+         
+         <!-- 删除积分变化 -->
+         <delete id="delete">
+         	delete from score_change 
+         	where
+         	id = #{id}
+         </delete>
+          	
+         
+    </mapper>  

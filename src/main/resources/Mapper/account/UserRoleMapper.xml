@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+    <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+    <mapper namespace="com.healthcloud.dao.account.UserRoleDao">  
+      
+        <resultMap type="UserRole" id="userRole">  
+            <id property="id" column="id"/>  
+            <result property="userId" column="user_id"/>  
+            <result property="roleId" column="role_id"/>  
+            <result property="createTime" column="create_time"/>
+             <result property="updateTime" column="update_time"/>
+        </resultMap>  
+          
+          <!-- 添加用户角色 -->
+          <insert id="add" parameterType="UserRole">
+          <selectKey keyProperty="id" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+        
+          	insert into user_role (user_id,role_id,create_time,update_time)
+          	
+          	values 
+          	(#{userId},#{roleId},#{createTime},#{updateTime})
+          	
+          </insert>
+  
+        <!-- 查询用户角色 -->  
+        <select id="query" resultMap="userRole" parameterType="UserRole" >  
+                SELECT * from user_role 
+                 <trim prefix="where" prefixOverrides="and |or">  
+				        <if test="userId != null">  
+				            user_id = #{userId}  
+				        </if>  
+				        <if test="roleId != null">  
+				            and role_id = #{roleId}  
+				        </if>  
+				        
+				   </trim>  
+				   
+        </select> 
+        
+          <!-- 查询用户角色 -->  
+        <select id="queryOne" resultMap="userRole" parameterType= "UserRole">  
+                SELECT * from user_role 
+                 <trim prefix="where" prefixOverrides="and |or">  
+				        <if test="userId != null">  
+				            user_id = #{userId}  
+				        </if>  
+				        <if test="roleId != null">  
+				            or role_id = #{roleId}  
+				        </if>  
+				   </trim>  
+				   
+        </select> 
+        
+             <!-- 查询用户角色 -->
+          <select id="queryAll" resultMap="userRole">
+          		select * from user_role
+          </select>
+          
+        <!-- 查询用户角色，根据id -->  
+        <select id="queryById"   >  
+                SELECT * from user_role 
+                    WHERE 
+                    id = #{id}  
+                   
+        </select>  
+        
+        
+		<!-- 更新用户角色信息 -->
+          <update id="update" parameterType="userRole">
+          	update user_role
+          	 <trim prefix="SET" suffixOverrides=",">  
+	        <if test="userId != null and userId != ''">  
+	           user_id = #{userId},  
+	        </if>  
+	           <if test="roleId != null and roleId != ''">  
+	            role_id = #{roleId},  
+	        </if>  
+	        
+        </trim>
+       		 where 
+      	  id = #{id} 
+      	
+          </update>
+          
+     
+         
+         <!-- 删除用户角色 -->
+         <delete id="delete">
+         	delete from  user_role 
+         	where
+         	id = #{id}
+         </delete>
+          	
+         
+    </mapper>  

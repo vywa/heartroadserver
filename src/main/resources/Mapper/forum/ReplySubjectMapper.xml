@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+    <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+    <mapper namespace="com.healthcloud.dao.forum.ReplySubjectDao">  
+      
+        <resultMap type="ReplySubject" id="replySubject">  
+            <id property="id" column="id"/>  
+            <result property="userId" column="user_id"/>  
+            <result property="subjectId" column="subject_id"/>  
+            <result property="replyContent" column="reply_content"/>
+             <result property="replyIocInfo" column="reply_ioc_info"/>
+            <result property="replySoundUrl" column="reply_sound_url"/>  
+             <result property="replyImgUrls" column="reply_img_urls"/> 
+             <result property="replyTime" column="reply_time"/>  
+            <result property="repeatReply" column="repeat_reply"/>  
+            <result property="status" column="status"/>
+        </resultMap>  
+          
+        <!-- 查询好友，根据rosterId -->  
+        <insert id="reply" parameterType="ReplySubject" >  
+            insert into reply_subject 
+            (user_id,subject_id,reply_content,reply_ioc_info,reply_sound_url,reply_img_urls,reply_time,status)
+            values 
+            (#{userId},#{subjectId},#{replyContent},
+            #{replyIocInfo},#{replySoundUrl},
+            #{replyImgUrls},#{replyTime},#{status})
+        </insert>  
+        
+        <!-- 查找某个帖子的回复 -->
+        <select id="queryList" resultType="replySubject">
+        	select * from reply_subject
+        	where
+        	subject_id = #{subjectId}
+        	
+        	limit #{start},#{limit}
+        </select>
+        
+        <!-- 删除帖子 -->
+		<delete id="delete">
+			delete from reply_subject 
+			where id = #{id}
+		</delete>
+        
+        
+          
+    </mapper>  

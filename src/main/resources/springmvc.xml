@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tool="http://www.springframework.org/schema/tool"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	                    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	                    http://www.springframework.org/schema/context
+	                    http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	                    http://www.springframework.org/schema/tx
+	                    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	                    http://www.springframework.org/schema/aop 
+	                    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	                    http://www.springframework.org/schema/tool	                    
+	                    http://www.springframework.org/schema/tool/spring-tool-4.0.xsd
+	                 	http://www.springframework.org/schema/mvc
+	                    http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+	<!-- 启用spring mvc 注解 
+	<context:annotation-config /> 
+	<mvc:annotation-driven /> 
+	<mvc:default-servlet-handler />
+<context:annotation-config />    -->
+
+    <!-- 把标记了@Controller注解的类转换为bean -->            
+    <context:component-scan base-package="com.healthcloud.web" />
+     <!-- 默认的注解映射的支持 -->
+	<mvc:annotation-driven /> 
+
+
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">  
+      <property name="messageConverters">     
+         <list>     
+             <bean class = "org.springframework.http.converter.StringHttpMessageConverter">     
+                <property name = "supportedMediaTypes">  
+                      <list>  
+                          <value>text/plain;charset=UTF-8</value>     
+                     </list>     
+                </property>     
+             </bean>     
+         </list>     
+      </property>   
+    </bean>  
+    
+	 <!-- 配置资源文件,防止被拦截 -->
+    <mvc:resources location="/WEB-INF/images/" mapping="/image/**"/>  
+    <mvc:resources location="/WEB-INF/js/" mapping="/js/**"/>  
+    <mvc:resources location="/WEB-INF/css/" mapping="/css/**"/>
+
+	 <mvc:interceptors>
+
+        <mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <bean class="com.healthcloud.util.interceptor.LoginInterceptor">
+                <property name="allowUrls">
+                    <list>
+						<value>/reglog/username</value>
+						<value>/account/register</value>
+						  <value>/account/mailReceive</value>
+						    <value>/account/mailSend</value>
+						      <value>/account/smsReceive</value>
+						        <value>/account/smsSend</value>
+						         <value>/account/findPassword</value>
+						      	 <value>/account/updatePassword</value>
+						           <value>/version</value>
+						           <value>/resource</value>
+						           <value>/role</value>
+						           <value>/subject</value>
+						           <value>/replysubject</value>
+					               <value>/msgdetail</value>
+					                <value>/msgsubject</value> 
+									<value>/scorerule</value>
+									<value>/scoreitem</value>
+									<value>levelchange</value>
+									<value>/levelrule</value>
+									<value>rankitem</value>
+									<value>/ranklist</value>
+									<value>/order</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:interceptor>
+	</mvc:interceptors>
+</beans>
+
+
+
+
+

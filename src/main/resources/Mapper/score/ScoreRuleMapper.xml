@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+    <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+    <mapper namespace="com.healthcloud.dao.score.ScoreRuleDao">  
+      
+        <resultMap type="ScoreRule" id="scoreRule">  
+            <id property="id" column="id"/>  
+            <result property="name" column="name"/>  
+              <result property="description" column="description"/>  
+                <result property="updateTime" column="update_time"/>  
+        </resultMap>  
+          
+          <!-- 添加积分规则 -->
+          <insert id="add" parameterType="ScoreRule">
+          <selectKey keyProperty="id" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+        
+          	insert into score_rule (name,description,update_time)
+          	values 
+          	(#{name},#{description},#{updateTime})
+          	
+          </insert>
+  
+        <!-- 查询积分规则 -->  
+        <select id="query" resultMap="scoreRule" parameterType="ScoreRule" >  
+                SELECT * from score_rule 
+                 <trim prefix="where" prefixOverrides="and |or">  
+				        <if test="name != null">  
+				            name = #{name}  
+				        </if>  
+				          <if test="description != null">  
+				            description = #{description}  
+				        </if> 
+				   </trim>  
+        </select> 
+        
+          <!-- 查询积分规则，根据用户名 -->  
+        <select id="queryOne" resultMap="scoreRule" parameterType= "ScoreRule">  
+                SELECT * from score_rule 
+                 <trim prefix="where" prefixOverrides="and |or">  
+				        <if test="name != null">  
+				            name = #{name}  
+				        </if>  
+				   </trim>  
+				   
+        </select> 
+        
+             <!-- 查询所有积分规则 -->
+          <select id="queryAll" resultMap="scoreRule">
+          		select * from score_rule
+          </select>
+          
+        <!-- 查询积分规则，根据id -->  
+        <select id="queryById" resultMap="scoreRule"  >  
+                SELECT * from score_rule 
+                    WHERE 
+                    id = #{id}  
+               
+        </select>  
+        
+        
+		<!-- 更新积分规则 -->
+          <update id="update" parameterType="ScoreRule">
+          	update score_rule
+          	 <trim prefix="SET" suffixOverrides=",">  
+	        <if test="name != null and name != ''">  
+	           name = #{name}
+	        </if>  
+	         <if test="description != null and description != ''">  
+	           description = #{description}
+	        </if>  
+	          <if test="updateTime != null and updateTime != ''">  
+	           update_time = #{updateTime}
+	        </if>  
+	       
+        </trim>
+       		 where 
+      	  id = #{id} 
+      	
+          </update>
+          
+     
+         
+         <!-- 删除积分规则 -->
+         <delete id="delete">
+         	delete from score_rule 
+         	where
+         	id = #{id}
+         </delete>
+          	
+         
+    </mapper>  
