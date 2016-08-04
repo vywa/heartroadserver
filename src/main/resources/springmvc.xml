@@ -69,6 +69,7 @@
 						           <value>/subject</value>
 						           <value>/replysubject</value>
 					               <value>/msgdetail</value>
+					                <value>/chat</value>
 					                <value>/msgsubject</value> 
 									<value>/scorerule</value>
 									<value>/scoreitem</value>

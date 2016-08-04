@@ -146,7 +146,7 @@ public class ChatController {
 	            String timestamp = request.getParameter("timestamp");  
 	            String nonce = request.getParameter("nonce");  
 	            String echostr = request.getParameter("echostr");  
-	            log.info("收到的字符为: "+signature+" "+timestamp+" "+nonce+" "+echostr);
+	           
 	            String token = TokenUtil.get();
 	            if (TokenUtil.checkSignature(token, signature, timestamp, nonce)) {
 	                response.getWriter().write(echostr);
